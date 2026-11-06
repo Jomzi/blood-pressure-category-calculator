@@ -1,5 +1,10 @@
 
+
 name: Blood Pressure Calculator CI
+
+env:
+  AZURE_WEBAPP_NAME: bp-calculator-jomzi
+  AZURE_WEBAPP_PACKAGE_PATH: './publish'
 
 on:
   push:
@@ -20,7 +25,7 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@v4
 
-      - name: Set up .NET 9
+      - name: Set up .NET 10
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
@@ -30,3 +35,24 @@ jobs:
 
       - name: Build application
         run: dotnet build BPCalculator.sln --configuration Release --no-restore
+
+      # Publish the Blood Pressure Calculator application
+      # This creates the files needed to deploy the application to Azure
+      - name: Publish application
+        run: dotnet publish BPCalculator/BPCalculator.csproj --configuration Release --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --no-build
+
+      # Deploy the published application to our Azure Web App
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          # Identifies the Azure Web App we want to deploy to
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+
+          # Uses the publish profile stored securely in GitHub repository secrets
+          # This allows GitHub Actions to authenticate with Azure
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+
+          # Tells Azure where to find the published application files
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+
