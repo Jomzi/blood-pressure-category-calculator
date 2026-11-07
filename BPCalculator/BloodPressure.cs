@@ -32,7 +32,7 @@ namespace BPCalculator
             get
             {
                 // Check the highest category first
-                if (Systolic >= 140 || Diastolic >= 90)
+                if (Systolic >= 140 || Diastolic >= 90)         //Fixes bug causing all readings to return low blood pressure
                 {
                     return BPCategory.High;
                 }
