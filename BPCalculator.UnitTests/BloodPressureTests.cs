@@ -7,7 +7,7 @@ namespace BPCalculator.UnitTests
     public class BloodPressureTests
     {
         // Allows multiple test cases to run using different input values
-        [DataTestMethod]
+        [TestMethod]
 
         // Test data: systolic, diastolic, expected category
         [DataRow(80, 50, BPCategory.Low)]
