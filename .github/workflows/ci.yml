@@ -36,6 +36,10 @@ jobs:
       - name: Build application
         run: dotnet build BPCalculator.sln --configuration Release --no-restore
 
+      # Run automated unit tests before publishing
+      - name: Run unit tests
+        run: dotnet test BPCalculator.UnitTests/BPCalculator.UnitTests.csproj --configuration Release --no-build
+
       # Publish the Blood Pressure Calculator application
       # This creates the files needed to deploy the application to Azure
       - name: Publish application
