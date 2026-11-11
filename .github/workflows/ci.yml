@@ -24,21 +24,48 @@ jobs:
     steps:
       - name: Check out source code
         uses: actions/checkout@v4
+        with:
+          # Fetch full repository history for SonarQube
+          fetch-depth: 0
 
       - name: Set up .NET 10
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
 
+      # Install SonarScanner for .NET
+      - name: Install SonarScanner
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+
+      # Begin SonarQube Cloud analysis
+      - name: Begin SonarQube analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet sonarscanner begin \
+            /k:"Jomzi_blood-pressure-category-calculator" \
+            /o:"Jomzi" \
+            /d:sonar.token="$SONAR_TOKEN" \
+            /d:sonar.host.url="https://sonarcloud.io"
+
       - name: Restore dependencies
         run: dotnet restore BPCalculator.sln
 
       - name: Build application
-        run: dotnet build BPCalculator.sln --configuration Release --no-restore
+        run: dotnet build BPCalculator.sln --configuration Release --no-restore  --no-incremental
 
       # Run automated unit tests before publishing
       - name: Run unit tests
         run: dotnet test BPCalculator.UnitTests/BPCalculator.UnitTests.csproj --configuration Release --no-build
+
+      # Complete SonarQube Cloud analysis
+      - name: End SonarQube analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
 
       # Publish the Blood Pressure Calculator application
       # This creates the files needed to deploy the application to Azure
@@ -47,6 +74,8 @@ jobs:
 
       # Deploy the published application to our Azure Web App
       - name: Deploy to Azure Web App
+        # Prevent deployment during pull requests
+        if: github.event_name == 'push'
         uses: azure/webapps-deploy@v2
         with:
           # Identifies the Azure Web App we want to deploy to
