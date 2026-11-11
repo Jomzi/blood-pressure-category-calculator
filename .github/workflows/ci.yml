@@ -46,7 +46,7 @@ jobs:
         run: |
           dotnet sonarscanner begin \
             /k:"Jomzi_blood-pressure-category-calculator" \
-            /o:"Jomzi" \
+            /o:"jomzi" \
             /d:sonar.token="$SONAR_TOKEN" \
             /d:sonar.host.url="https://sonarcloud.io"
 
