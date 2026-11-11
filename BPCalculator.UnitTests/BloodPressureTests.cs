@@ -16,6 +16,14 @@ namespace BPCalculator.UnitTests
         [DataRow(110, 85, BPCategory.PreHigh)]
         [DataRow(145, 85, BPCategory.High)]
 
+        // Boundary-value tests: check the category at the points where
+        // one blood pressure category ends and another category begins.
+        // This ensures the category thresholds are handled correctly.
+        [DataRow(89, 59, BPCategory.Low)]
+        [DataRow(119, 79, BPCategory.Ideal)]
+        [DataRow(120, 80, BPCategory.PreHigh)]
+        [DataRow(140, 90, BPCategory.High)]
+
         // Receives the values from each DataRow
         public void Category_WithGivenReadings_ReturnsExpectedCategory(
             int systolic, int diastolic, BPCategory expectedCategory)
