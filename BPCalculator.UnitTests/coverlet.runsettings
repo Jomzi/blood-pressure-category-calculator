@@ -1,0 +1,17 @@
+
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <Exclude>
+			 [BPCalculator]BPCalculator.Pages.Pages_*,
+			 [BPCalculator]BPCalculator.Pages.ErrorModel,
+			 [BPCalculator]BPCalculator.Pages.PrivacyModel
+		  </Exclude>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

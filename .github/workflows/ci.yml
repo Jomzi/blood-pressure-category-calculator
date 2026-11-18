@@ -61,7 +61,7 @@ jobs:
         run: dotnet test BPCalculator.UnitTests/BPCalculator.UnitTests.csproj --configuration Release --no-build
 
       # Complete SonarQube Cloud analysis
-      - name: End SonarQube analysis
+      - name: Analyze code with SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
