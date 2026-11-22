@@ -5,12 +5,15 @@
       <DataCollector friendlyName="XPlat Code Coverage">
         <Configuration>
           <Format>cobertura</Format>
-          <Exclude>
-			 [BPCalculator]BPCalculator.Pages.Pages_*,
-			 [BPCalculator]BPCalculator.Pages.ErrorModel,
-			 [BPCalculator]BPCalculator.Pages.PrivacyModel
-		  </Exclude>
-        </Configuration>
+			<Exclude>
+				[BPCalculator]BPCalculator.Pages.Pages_*,
+				[BPCalculator]BPCalculator.Pages.Shared.Pages_Shared__Layout,
+				[BPCalculator]BPCalculator.Program,
+				[BPCalculator]BPCalculator.Startup,
+				[BPCalculator]BPCalculator.Pages.ErrorModel,
+				[BPCalculator]BPCalculator.Pages.PrivacyModel
+			</Exclude>
+		</Configuration>
       </DataCollector>
     </DataCollectors>
   </DataCollectionRunSettings>
