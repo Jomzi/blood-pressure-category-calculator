@@ -64,6 +64,45 @@ jobs:
       - name: Run BDD tests
         run: dotnet test BPCalculator.BDDTests/BPCalculator.BDDTests.csproj --configuration Release
 
+      # Set up Node.js for Playwright
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: E2ETests/package-lock.json
+
+      # Install Playwright dependencies
+      - name: Install Playwright dependencies
+        working-directory: E2ETests
+        run: npm ci
+
+      # Install Playwright browsers
+      - name: Install Playwright browsers
+        working-directory: E2ETests
+        run: npx playwright install --with-deps
+
+      # Start the calculator application for E2E testing
+      - name: Start application
+        run: |
+          dotnet run --project BPCalculator/BPCalculator.csproj --configuration Release --no-build --no-launch-profile --urls http://127.0.0.1:5000 > app.log 2>&1 &
+
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:5000 > /dev/null; then
+              echo "Application is ready."
+              exit 0
+            fi
+            sleep 2
+          done
+
+          cat app.log
+          exit 1
+
+      # Run Playwright end-to-end tests
+      - name: Run Playwright E2E tests
+        working-directory: E2ETests
+        run: npx playwright test
+
       # Complete SonarQube Cloud analysis
       - name: Analyze code with SonarCloud
         env:
